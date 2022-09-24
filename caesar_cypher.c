@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     int en_letter_freqs[ENGLISH_ALPHABET_LETTERS]; 
     
     //printf("Hello, %s", argv[1]);
-    read_file(argv[1]);
+    //read_file(argv[1]);
     write_file("BELLAAAAAAAAAAAAAAA\0");
     return 0;
 }
@@ -39,7 +39,7 @@ void read_file(char* file_name) {
 
     printf("%s CONTENT:\n", file_name);
     if (file_pointer == NULL) {
-        printf("File not available.\n");
+        fprintf(stderr,"File not available.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -62,7 +62,7 @@ void write_file(char *ch) {
 
     printf("\nWRITING CONTENT ON THE NEW FILE...\n");
     if (file_pointer == NULL) {
-        printf("\nError while creating the new file.\n");
+        fprintf(stderr, "\nError while creating the new file.\n");
         exit(EXIT_FAILURE);
     }
 
