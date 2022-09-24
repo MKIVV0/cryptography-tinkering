@@ -16,25 +16,66 @@
 #define LAST_ASCI_LETTER_CODE 122   // lowercase z
 
 void read_file(char* file_name);
+void write_file(char *ch);
 
 int main(int argc, char **argv) {
     int en_letter_freqs[ENGLISH_ALPHABET_LETTERS]; 
     
     //printf("Hello, %s", argv[1]);
-    //read_file(argv[1]);
-    printf("%c and %c", FIRST_ASCII_LETTER_CODE, LAST_ASCI_LETTER_CODE);
+    read_file(argv[1]);
+    write_file("BELLAAAAAAAAAAAAAAA\0");
     return 0;
 }
 
 /*
-+ This method reads the encrypted file given in input.
+* This function reads the given file in input.
 */
 void read_file(char* file_name) {
-    FILE *ifp;
-    char a[100];
+    FILE *file_pointer;
+    char ch;
     
-    ifp = fopen(file_name, "r");
-    fscanf(ifp, "%s", a);
-    fread(a, sizeof(char), 15, ifp);
+    // Opens the file in reading mode
+    file_pointer = fopen(file_name, "r");
+
+    printf("%s CONTENT:\n", file_name);
+    if (file_pointer == NULL) {
+        printf("File not available.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Prints the file content character by character, until 
+    * until the end of file character is encountered.
+    */
+    while (ch != EOF){
+        ch = fgetc(file_pointer);
+        printf("%c", ch);
+    }
+    printf("\n");
+    fflush(file_pointer);
+    fclose(file_pointer);
 }
 
+// This function writes to file some given content.
+void write_file(char *ch) {
+    FILE *file_pointer;
+    file_pointer = fopen("encrypted.txt", "w");
+
+    printf("\nWRITING CONTENT ON THE NEW FILE...\n");
+    if (file_pointer == NULL) {
+        printf("\nError while creating the new file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while (*ch != EOF) {
+        fputc(*ch, file_pointer);
+        ch++;
+    }
+    fflush(file_pointer);
+    fclose(file_pointer);
+    printf("\nWRITING OPERATION FINISHED.\n");
+}
+
+// This function encrypts a plain-text file.
+void encrypt() {
+    
+}
