@@ -127,11 +127,11 @@ int verify(char* f1, char* f2) {
     FILE* source_file = fopen(f1, "r");
     FILE* dest_file = fopen(f2, "r");
 
-    if (source_file || dest_file == NULL) {
+    /*if (source_file || dest_file == NULL) {
         fprintf(stderr,"Something went wrong with either of the files.\n");
-        printf("%d %d", *source_file, *dest_file);
+        printf("%d %d\n", *source_file, *dest_file);
         exit(EXIT_FAILURE);
-    }
+    }*/
 
     char ch1, ch2;
     int shifted;
@@ -147,7 +147,7 @@ int verify(char* f1, char* f2) {
             exit(EXIT_FAILURE);
         }*/
     }
-    printf("f1 cnt: %d\nf2 cnt: %d", counter_f1, counter_f2);
+    printf("f1 cnt: %d\nf2 cnt: %d\n", counter_f1, counter_f2);
 
     return 0;
 }
