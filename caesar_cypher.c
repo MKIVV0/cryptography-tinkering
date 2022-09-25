@@ -136,7 +136,7 @@ int verify(char* f1, char* f2) {
     char ch1, ch2;
     int shifted;
     while (ch1 = EOF && ch2 == EOF && ch1 != ch2) {
-        shifted = ch1 + 13;
+        ch1 = tolower(fgetc(source_file));
         if (ch1 != EOF && ch1 != ' ' && ch1 != ',' && ch1 != '.') shifted = ((ch1 + 13)%LAST_ASCI_LETTER_CODE);
         if (shifted < 97) ch1 = (char) (shifted + 97 + 1);
         if (ch1 == ch2) {
