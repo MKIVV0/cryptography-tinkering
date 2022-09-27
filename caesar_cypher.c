@@ -22,15 +22,21 @@ void read_file(char* file_name);
 void write_file(char *file_name);
 void encrypt(char *file_name);
 int verify(char* f1, char* f2);
+char *encrypt_message(char *message);
+char *decrypt_message(char *message);
 
 int main(int argc, char **argv) {
     int en_letter_freqs[ENGLISH_ALPHABET_LETTERS]; 
     
     //printf("Hello, %s", argv[1]);
     //read_file(argv[1]);
-    char* source_file = "content.txt";
+    //char* source_file = "content.txt";
     //encrypt(source_file);
-    printf("Encryption correctness: %d\n", verify("content.txt", "encrypted.txt"));
+    //printf("Encryption correctness: %d\n", verify("content.txt", "encrypted.txt"));
+    char *msg = "Ciao, come va?";
+    char *enc = encrypt_message(msg);
+    printf("Encrypted message: %s\n", enc);
+    printf("Decrypted message: %s\n", decrypt_message(enc));
     return 0;
 }
 
@@ -115,6 +121,44 @@ void encrypt(char* file_name) {
     fclose(source_file);
     fclose(dest_file);
     printf("\nWRITING OPERATION FINISHED.\n");
+}
+
+char *encrypt_message(char *message) {
+    int message_length = 0;
+    int idx = 0;
+    while (message[idx] != '\0') {
+        message_length++;
+        idx++;
+    }
+
+    char *ch = (char*)calloc(message_length+1, sizeof(char));
+    int shifted;
+    for (int i = 0; message[i] != '\0'; i++) {
+        ch[i] = tolower(message[i]);
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.') 
+            shifted = ((ch[i] + 13)%LAST_ASCI_LETTER_CODE);
+        if (shifted < 97 ) ch[i] = (char) (shifted + 97 + 1); 
+    }
+    return ch;
+}
+
+char *decrypt_message(char *message) {
+    int message_length = 0;
+    int idx = 0;
+    while (message[idx] != '\0') {
+        message_length++;
+        idx++;
+    }
+
+    char *ch = (char*)calloc(message_length+1, sizeof(char));
+    int shifted;
+    for (int i = 0; message[i] != '\0'; i++) {
+        ch[i] = tolower(message[i]);
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.') 
+            shifted = ((ch[i] - 13)%LAST_ASCI_LETTER_CODE);
+        if (shifted < 97 ) ch[i] = (char) (LAST_ASCI_LETTER_CODE - shifted - 1); 
+    }
+    return ch; 
 }
 
 /* 
