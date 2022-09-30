@@ -17,6 +17,7 @@
 #define ITALIAN_ALPHABET_LETTERS 21
 #define FIRST_ASCII_LETTER_CODE 97  // lowercase a
 #define LAST_ASCI_LETTER_CODE 122   // lowercase z
+#define ENG_ALPHABET_RANGE (FIRST_ASCII_LETTER_CODE - LAST_ASCI_LETTER_CODE + 1)
 
 void read_file(char* file_name);
 void write_file(char *file_name);
@@ -30,14 +31,24 @@ int main(int argc, char **argv) {
     
     //printf("Hello, %s", argv[1]);
     //read_file(argv[1]);
-    //char* source_file = "content.txt";
-    //encrypt(source_file);
+    char* source_file = "content.txt";
+    write_file(source_file);
     //printf("Encryption correctness: %d\n", verify("content.txt", "encrypted.txt"));
+    /*
     char *msg = "Ciao, come va?";
     char *enc = encrypt_message(msg);
     printf("Encrypted message: %s\n", enc);
     printf("Decrypted message: %s\n", decrypt_message(enc));
-    return 0;
+    */
+   /*
+   char a = 'z'; int shift = 3;
+   printf("Character: %c\n", a);
+   //a = a + (97 % ENG_ALPHABET_RANGE) - 1 + 13;   // This works
+
+   a = LAST_ASCI_LETTER_CODE - ((a+shift) % FIRST_ASCII_LETTER_CODE) + (2 * shift) - 1;
+   printf("Shifted: %s  Int val: %d\n", &a, a);
+   */
+   return 0;
 }
 
 /*
@@ -84,10 +95,12 @@ void write_file(char *file_name) {
         exit(EXIT_FAILURE);
     }
 
-    char ch;
-    while (ch != EOF) {
-        ch = fgetc(source_file);
-        fputc(ch, dest_file);
+    char *ch;
+    char *ch2;
+    while (*ch != EOF && *ch2 != '\0') {
+        *ch = tolower(fgetc(source_file));
+        ch2 = encrypt_message(ch);
+        fputc(*ch2, dest_file);
     }
     fclose(source_file);
     fclose(dest_file);
@@ -123,25 +136,31 @@ void encrypt(char* file_name) {
     printf("\nWRITING OPERATION FINISHED.\n");
 }
 
+/*
+* This method encrypts a given message by shifting each character
+* by n positions.
+*/
 char *encrypt_message(char *message) {
     int message_length = 0;
     int idx = 0;
+    int shift = 13;
     while (message[idx] != '\0') {
         message_length++;
         idx++;
     }
 
     char *ch = (char*)calloc(message_length+1, sizeof(char));
-    int shifted;
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.') 
-            shifted = ((ch[i] + 13)%LAST_ASCI_LETTER_CODE);
-        if (shifted < 97 ) ch[i] = (char) (shifted + 97 + 1); 
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.') {
+            // shifted = ((ch[i] + shift)%LAST_ASCI_LETTER_CODE);
+            ch[i] = LAST_ASCI_LETTER_CODE - ((ch[i]+shift) % FIRST_ASCII_LETTER_CODE) + (2 * shift) - 1;
+        }
     }
     return ch;
 }
 
+// TO REVIEW
 char *decrypt_message(char *message) {
     int message_length = 0;
     int idx = 0;
