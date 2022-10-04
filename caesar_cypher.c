@@ -91,44 +91,20 @@ void write_file(char *file_name) {
 
     printf("WRITING CONTENT ON THE NEW FILE...\n");
     if (source_file == NULL || dest_file == NULL) {
-        fprintf(stderr, "\nError while creating the new file.\n");
+        fprintf(stderr, "\nFile error.\n");
         exit(EXIT_FAILURE);
     }
 
-    char *ch;
-    char *ch2;
-    while (*ch != EOF && *ch2 != '\0') {
-        *ch = tolower(fgetc(source_file));
-        ch2 = encrypt_message(ch);
-        fputc(*ch2, dest_file);
-    }
-    fclose(source_file);
-    fclose(dest_file);
-    printf("\nWRITING OPERATION FINISHED.\n");
-}
-
-/* 
-* This function encrypts a plain-text file and writes copies its content to
-* a new file named "encrypted.txt".
- */
-void encrypt(char* file_name) {
-    FILE *dest_file = fopen("encrypted.txt", "w");
-    FILE *source_file = fopen(file_name, "r");
-
-    printf("WRITING CONTENT ON THE NEW FILE...\n");
-    if (source_file == NULL || dest_file == NULL) {
-        fprintf(stderr, "\nError while creating the new file.\n");
-        exit(EXIT_FAILURE);
-    }
-
+    /*
+    * Now it works
+    * Gotta review encrypt_message method
+    */
     char ch;
-    int shifted;
+    char *chp = &ch;
+    char *ch2;
     while (ch != EOF) {
         ch = tolower(fgetc(source_file));
-        if (ch != EOF && ch != ' ' && ch != ',' && ch != '.') 
-            shifted = ((ch + 13)%LAST_ASCI_LETTER_CODE);
-        if (shifted < 97) ch = (char) (shifted + 97 + 1);
-        printf("%c", ch);
+        //ch2 = encrypt_message(chp);
         fputc(ch, dest_file);
     }
     fclose(source_file);
