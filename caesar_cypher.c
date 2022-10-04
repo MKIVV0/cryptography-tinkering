@@ -21,7 +21,6 @@
 
 void read_file(char* file_name);
 void write_file(char *file_name);
-void encrypt(char *file_name);
 int verify(char* f1, char* f2);
 char *encrypt_message(char *message);
 char *decrypt_message(char *message);
@@ -31,23 +30,14 @@ int main(int argc, char **argv) {
     
     //printf("Hello, %s", argv[1]);
     //read_file(argv[1]);
+
     char* source_file = "content.txt";
     write_file(source_file);
-    //printf("Encryption correctness: %d\n", verify("content.txt", "encrypted.txt"));
-    /*
-    char *msg = "Ciao, come va?";
-    char *enc = encrypt_message(msg);
-    printf("Encrypted message: %s\n", enc);
-    printf("Decrypted message: %s\n", decrypt_message(enc));
-    */
-   /*
-   char a = 'z'; int shift = 3;
-   printf("Character: %c\n", a);
-   //a = a + (97 % ENG_ALPHABET_RANGE) - 1 + 13;   // This works
 
-   a = LAST_ASCI_LETTER_CODE - ((a+shift) % FIRST_ASCII_LETTER_CODE) + (2 * shift) - 1;
-   printf("Shifted: %s  Int val: %d\n", &a, a);
-   */
+    char *msg = "Ciao, come va?";
+    char *encrypted = encrypt_message(msg); // REVIEW THE METHOD
+    printf("Encrypted message: %s\n", encrypted);
+    
    return 0;
 }
 
@@ -100,11 +90,11 @@ void write_file(char *file_name) {
     * Gotta review encrypt_message method
     */
     char ch;
-    char *chp = &ch;
-    char *ch2;
+    char *character_pointer = &ch;
+    char *encrypted_character;
     while (ch != EOF) {
         ch = tolower(fgetc(source_file));
-        //ch2 = encrypt_message(chp);
+        //encrypted_character = encrypt_message(character_pointer);
         fputc(ch, dest_file);
     }
     fclose(source_file);
@@ -120,6 +110,8 @@ char *encrypt_message(char *message) {
     int message_length = 0;
     int idx = 0;
     int shift = 13;
+
+    // To get the message length
     while (message[idx] != '\0') {
         message_length++;
         idx++;
@@ -128,9 +120,10 @@ char *encrypt_message(char *message) {
     char *ch = (char*)calloc(message_length+1, sizeof(char));
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.') {
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '?') {
             // shifted = ((ch[i] + shift)%LAST_ASCI_LETTER_CODE);
-            ch[i] = LAST_ASCI_LETTER_CODE - ((ch[i]+shift) % FIRST_ASCII_LETTER_CODE) + (2 * shift) - 1;
+            // ch[i] = LAST_ASCI_LETTER_CODE - ((ch[i]+shift) % FIRST_ASCII_LETTER_CODE) + (2 * shift) - 1;
+            ch[i] = ((ch[i]+shift)%LAST_ASCI_LETTER_CODE) + FIRST_ASCII_LETTER_CODE;
         }
     }
     return ch;
@@ -157,6 +150,7 @@ char *decrypt_message(char *message) {
 }
 
 /* 
+* TO REVIEW
 * This function verifies whether the given file has been correctly encrypted.
 * The first file given in input has to be the unencrypted one.
 */
