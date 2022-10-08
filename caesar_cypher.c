@@ -3,6 +3,13 @@
 * The goal of this program is to encrypt a given text and give it as a
 * sample to another program, which task is to decrypt it, without prior 
 * knowledge of the decryption key.
+*
+* Axioms:
+* 1) Punctuation characters are not shifted;
+* 2) All characters are converted to lowercase;
+* 3) The shifting number can be arbitrarily chosen;
+* 4) The shifting is circular (lower-bound = 97, upper-bound = 122).
+*
 * The text contained inside the file "content.txt" has been 
 * generated at https://randomwordgenerator.com/paragraph.php
 * @author Matteo Huang
@@ -16,7 +23,6 @@
 #include <string.h>
 
 #define ENGLISH_ALPHABET_LETTERS 26
-#define ITALIAN_ALPHABET_LETTERS 21
 #define FIRST_ASCII_LETTER_CODE 97  // lowercase a
 #define LAST_ASCII_LETTER_CODE 122   // lowercase z
 
