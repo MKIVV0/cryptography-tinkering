@@ -12,13 +12,14 @@
 #define ENG_ALPHABET_NUMBER (LAST_ASCII_LETTER_CODE - FIRST_ASCII_LETTER_CODE + 1) // 26
 
 struct letterinfo {
-    char ch;
     double percentage;
+    char ch;
 };
 
 typedef struct letterinfo LETTER;
 
 void count_occurrencies(char* file_name, int occurrencies_list[]);
+
 
 int main(int argc, char **argv) {
     LETTER E; E.ch = 'e'; E.percentage = 13;
@@ -61,9 +62,9 @@ int main(int argc, char **argv) {
     char* encrypted_file = "encrypted.txt";
     count_occurrencies(encrypted_file, text_occurrencies_list);
 
+    // prints each letter occurrency in the given text
     for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
         printf("index %d, letter %c count: %d\n", i, eng_letters_occurrencies[i], text_occurrencies_list[i]);
-    printf("TEST AT LINE 66 for H: %d\n", text_occurrencies_list[7]); // YES. THERE IS A PROBLEM IF THE FORMAT SPECIFIER IS .2f
     
     // Counts the total number of characters of the given file
     int total_ch_num = 0;
@@ -73,20 +74,25 @@ int main(int argc, char **argv) {
 
 
     // Converts the given file occurrencies in percentages
-    double ch_percentage_list[26];
-    for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
-       ch_percentage_list[i] = (text_occurrencies_list[i]/((double)total_ch_num))*100;
-    
-    printf("TEST E: %.2f\n", (text_occurrencies_list[0]/((double)total_ch_num))*100); // WITHOUT CONVERTING total_ch_num, which is an integer, to a double before the evaluation, creates a problem of conversion
-    printf("TEST h: %.2f\n", (text_occurrencies_list[7]/((double)total_ch_num))*100);
+    LETTER ch_percentage_list[26];
+    for (int i = 0; i < ENG_ALPHABET_NUMBER; i++) {
+       ch_percentage_list[i].ch = eng_letters_occurrencies[i].ch;
+       ch_percentage_list[i].percentage = (text_occurrencies_list[i]/((double)total_ch_num))*100;
+    }
 
+    printf("DEBUG TEST h: %.2f\n", ch_percentage_list[7].percentage);
+
+    // Prints the percentages
     for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
        printf("letter %c percentage: %.2f\n", eng_letters_occurrencies[i].ch, ch_percentage_list[i]);
-    
+
 
     return 0;
 }
 
+/*
+* This function counts the letter occurrencies of a given text file.
+*/
 void count_occurrencies(char* file_name, int occurrencies_list[]) {
     FILE *file_pointer;
     char ch = 0;
@@ -191,4 +197,12 @@ void count_occurrencies(char* file_name, int occurrencies_list[]) {
     }
     printf("\n");
     fclose(file_pointer);
+}
+
+int partition() {
+    
+}
+
+void quicksort() {
+
 }
