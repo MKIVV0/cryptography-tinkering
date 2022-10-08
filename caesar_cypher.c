@@ -23,7 +23,6 @@
 void read_file(char* file_name);
 void write_encrypted_file(char *src_file, char *dst_file, int shift_num);
 void write_decrypted_file(char *src_file, char *dst_file, int shift_num);
-int verify(char* f1, char* f2);
 char *encrypt_message(char *message, int shift);
 char *decrypt_message(char *message, int shift);
 
