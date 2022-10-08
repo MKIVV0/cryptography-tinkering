@@ -27,7 +27,7 @@ char *encrypt_message(char *message, int shift);
 char *decrypt_message(char *message, int shift);
 
 int main(int argc, char **argv) {
-    int shift = 4;
+    int shift = 3;
     printf("Encryption process:\n");
     write_encrypted_file("content.txt", "encrypted.txt", shift);
     printf("Decryption process:\n");
@@ -115,7 +115,7 @@ void write_decrypted_file(char *src_file, char *dst_file, int shift_num) {
     char *modified_character;
     while (ch != EOF) {
         ch = tolower(fgetc(source_file));
-        modified_character = encrypt_message(character_pointer, shift_num);
+        modified_character = decrypt_message(character_pointer, shift_num);
         fputc(*modified_character, dest_file);
     }
     fclose(source_file);
@@ -142,7 +142,7 @@ char *encrypt_message(char *message, int shift_num) {
     char *ch = (char*)calloc(message_length+1, sizeof(char));
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?') {
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n') {
             shifted_char_val = ch[i] + shift;
             if (shifted_char_val > LAST_ASCII_LETTER_CODE) 
                 ch[i] = FIRST_ASCII_LETTER_CODE + (shifted_char_val - LAST_ASCII_LETTER_CODE - 1);
@@ -169,7 +169,7 @@ char *decrypt_message(char *message, int shift_num) {
     int shifted;
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?') {
+       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n') {
             shifted_char_val = ch[i] - shift;
             if (shifted_char_val < FIRST_ASCII_LETTER_CODE) 
                 ch[i] = LAST_ASCII_LETTER_CODE - (FIRST_ASCII_LETTER_CODE - shifted_char_val) + 1;
