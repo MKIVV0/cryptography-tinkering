@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
        ch_percentage_list[i] = (double)(text_occurrencies_list[i]/total_ch_num)*100;
     
-    printf("TEST E: %.2f\n", (text_occurrencies_list[0]/((double)total_ch_num))*100);
+    printf("TEST E: %.2f\n", (text_occurrencies_list[0]/((double)total_ch_num))*100); // WITHOUT CONVERTING total_ch_num, which is an integer, to a double before the evaluation, creates a problem of conversion
     printf("TEST h: %.2f\n", (text_occurrencies_list[7]/((double)total_ch_num))*100);
 
     for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
