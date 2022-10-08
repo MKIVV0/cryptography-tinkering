@@ -27,8 +27,7 @@
 #define LAST_ASCII_LETTER_CODE 122   // lowercase z
 
 void read_file(char* file_name);
-void write_encrypted_file(char *src_file, char *dst_file, int shift_num);
-void write_decrypted_file(char *src_file, char *dst_file, int shift_num);
+void write_file(char *src_file, char *dst_file, int shift_num, char mode);
 char *encrypt_message(char *message, int shift);
 char *decrypt_message(char *message, int shift);
 int verify_decryption_correctness(char *f1_name, char *f2_name);
@@ -39,9 +38,9 @@ int main(int argc, char **argv) {
     char* decrypted_text_file = "decrypted.txt";
     int shift = 3;
     printf("Encryption process:\n");
-    write_encrypted_file(plaintext_file, encrypted_text_file, shift);
+    write_file(plaintext_file, encrypted_text_file, shift, 'e');
     printf("Decryption process:\n");
-    write_decrypted_file(encrypted_text_file, decrypted_text_file, shift);
+    write_file(encrypted_text_file, decrypted_text_file, shift, 'd');
 
     printf("VERIFICATION OF DECRYPTION CORRECTNESS: %d\n", verify_decryption_correctness(plaintext_file, decrypted_text_file));    
    return 0;
@@ -75,9 +74,10 @@ void read_file(char* file_name) {
 }
 
 /* 
-* This method decrypts a file and writes its content to another file.
+* This method either decrypts or encrypts, depending on the mode, a file and writes its content to another file.
+* 'e' for encrypting and 'd' for decrypting
 */
-void write_encrypted_file(char *src_file, char *dst_file, int shift_num) {
+void write_file(char *src_file, char *dst_file, int shift_num, char mode) {
     FILE *dest_file = fopen(dst_file, "w");
     FILE *source_file = fopen(src_file, "r"); // apparently, this pointer is null
 
@@ -93,7 +93,12 @@ void write_encrypted_file(char *src_file, char *dst_file, int shift_num) {
     char *modified_character;
     while (ch != EOF) {
         ch = tolower(fgetc(source_file));
-        modified_character = encrypt_message(character_pointer, shift_num);
+        if (mode == 'e') modified_character = encrypt_message(character_pointer, shift_num);
+        else if (mode == 'd') modified_character = decrypt_message(character_pointer, shift_num);
+        else {
+            fprintf(stderr, "INVALID MODE. EXITING...");
+            exit(EXIT_FAILURE);
+        }
         fputc(*modified_character, dest_file);
     }
     fclose(source_file);
@@ -101,32 +106,6 @@ void write_encrypted_file(char *src_file, char *dst_file, int shift_num) {
     printf("\nWRITING OPERATION FINISHED.\n");
 }
 
-/* 
-* This method decrypts a file and writes its content to another file.
-*/
-void write_decrypted_file(char *src_file, char *dst_file, int shift_num) {
-    FILE *dest_file = fopen(dst_file, "w");
-    FILE *source_file = fopen(src_file, "r"); // apparently, this pointer is null
-
-    printf("WRITING CONTENT ON THE NEW FILE...\n");
-    if (source_file == NULL  || dest_file == NULL) {
-        fprintf(stderr, "\nFile error.\n");
-        printf("ERROR CODE: %s\n", strerror(errno));
-        exit(EXIT_FAILURE);
-    }
-
-    char ch;
-    char *character_pointer = &ch;
-    char *modified_character;
-    while (ch != EOF) {
-        ch = tolower(fgetc(source_file));
-        modified_character = decrypt_message(character_pointer, shift_num);
-        fputc(*modified_character, dest_file);
-    }
-    fclose(source_file);
-    fclose(dest_file);
-    printf("\nWRITING OPERATION FINISHED.\n");
-}
 
 /*
 * This function encrypts a given message by shifting each character
