@@ -25,21 +25,24 @@ void write_encrypted_file(char *src_file, char *dst_file, int shift_num);
 void write_decrypted_file(char *src_file, char *dst_file, int shift_num);
 char *encrypt_message(char *message, int shift);
 char *decrypt_message(char *message, int shift);
+int verify_decryption_correctness(char *f1_name, char *f2_name);
 
 int main(int argc, char **argv) {
+    char* plaintext_file = "content.txt";
+    char* encrypted_text_file = "encrypted.txt";
+    char* decrypted_text_file = "decrypted.txt";
     int shift = 3;
     printf("Encryption process:\n");
-    write_encrypted_file("content.txt", "encrypted.txt", shift);
+    write_encrypted_file(plaintext_file, encrypted_text_file, shift);
     printf("Decryption process:\n");
-    write_decrypted_file("encrypted.txt", "decrypted.txt", shift);
-    
+    write_decrypted_file(encrypted_text_file, decrypted_text_file, shift);
+
+    printf("VERIFICATION OF DECRYPTION CORRECTNESS: %d\n", verify_decryption_correctness(plaintext_file, decrypted_text_file));    
    return 0;
 }
 
 /*
 * This function reads the given file in input.
-* Time complexity: Θ(n), counting the file time access as Θ(1)
-* Space complexity: O(1)
 */
 void read_file(char* file_name) {
     FILE *file_pointer;
@@ -65,10 +68,8 @@ void read_file(char* file_name) {
     fclose(file_pointer);
 }
 
-// This function copies the given file's content to a new file named "encrypted.txt".
 /* 
-* Time complexity: Θ(n), counting the file time access and creation as Θ(1)
-* Space complexity: O(1)
+* This method decrypts a file and writes its content to another file.
 */
 void write_encrypted_file(char *src_file, char *dst_file, int shift_num) {
     FILE *dest_file = fopen(dst_file, "w");
@@ -94,10 +95,8 @@ void write_encrypted_file(char *src_file, char *dst_file, int shift_num) {
     printf("\nWRITING OPERATION FINISHED.\n");
 }
 
-// This function copies the given file's content to a new file named "encrypted.txt".
 /* 
-* Time complexity: Θ(n), counting the file time access and creation as Θ(1)
-* Space complexity: O(1)
+* This method decrypts a file and writes its content to another file.
 */
 void write_decrypted_file(char *src_file, char *dst_file, int shift_num) {
     FILE *dest_file = fopen(dst_file, "w");
@@ -124,7 +123,7 @@ void write_decrypted_file(char *src_file, char *dst_file, int shift_num) {
 }
 
 /*
-* This method encrypts a given message by shifting each character
+* This function encrypts a given message by shifting each character
 * by n positions.
 */
 char *encrypt_message(char *message, int shift_num) {
@@ -142,7 +141,7 @@ char *encrypt_message(char *message, int shift_num) {
     char *ch = (char*)calloc(message_length+1, sizeof(char));
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n') {
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
             shifted_char_val = ch[i] + shift;
             if (shifted_char_val > LAST_ASCII_LETTER_CODE) 
                 ch[i] = FIRST_ASCII_LETTER_CODE + (shifted_char_val - LAST_ASCII_LETTER_CODE - 1);
@@ -153,7 +152,10 @@ char *encrypt_message(char *message, int shift_num) {
     return ch;
 }
 
-// TO REVIEW
+/*
+* This function decrypts a given message by shifting each character
+* by n positions.
+*/
 char *decrypt_message(char *message, int shift_num) {
     int message_length = 0;
     int idx = 0;
@@ -169,7 +171,7 @@ char *decrypt_message(char *message, int shift_num) {
     int shifted;
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n') {
+       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
             shifted_char_val = ch[i] - shift;
             if (shifted_char_val < FIRST_ASCII_LETTER_CODE) 
                 ch[i] = LAST_ASCII_LETTER_CODE - (FIRST_ASCII_LETTER_CODE - shifted_char_val) + 1;
@@ -178,4 +180,30 @@ char *decrypt_message(char *message, int shift_num) {
         } 
     }
     return ch; 
+}
+
+/*
+* This function verifies the correctness of two given file: one is the plaintext, 
+* the other is the decrypted file.
+*/
+int verify_decryption_correctness(char *f1_name, char *f2_name) {
+    FILE* f1 = fopen(f1_name, "r");
+    FILE* f2 = fopen(f1_name, "r");
+
+    if (f1 == NULL || f2 == NULL) {
+        fprintf(stderr, "\nFile error.\n");
+        printf("ERROR CODE: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    char ch_f1, ch_f2;
+    while (ch_f1 != EOF && ch_f2 != EOF) {
+        ch_f1 = tolower(getc(f1));
+        ch_f2 = tolower(getc(f2));
+        if (ch_f1 != ch_f2) {
+            printf("%c and %c are different.", ch_f1, ch_f2);
+            return 0;
+        }
+    }
+    return 1;
 }
