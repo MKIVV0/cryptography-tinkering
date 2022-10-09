@@ -42,7 +42,8 @@ int main(int argc, char **argv) {
     printf("Decryption process:\n");
     write_file(encrypted_text_file, decrypted_text_file, shift, 'd');
 
-    printf("VERIFICATION OF DECRYPTION CORRECTNESS: %d\n", verify_decryption_correctness(plaintext_file, decrypted_text_file));    
+   printf("VERIFICATION OF DECRYPTION CORRECTNESS: %d\n", verify_decryption_correctness(plaintext_file, decrypted_text_file));    
+
    return 0;
 }
 
@@ -126,7 +127,7 @@ char *encrypt_message(char *message, int shift_num) {
     char *ch = (char*)calloc(message_length+1, sizeof(char));
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
+        if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ':' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
             shifted_char_val = ch[i] + shift;
             if (shifted_char_val > LAST_ASCII_LETTER_CODE) 
                 ch[i] = FIRST_ASCII_LETTER_CODE + (shifted_char_val - LAST_ASCII_LETTER_CODE - 1);
@@ -156,7 +157,7 @@ char *decrypt_message(char *message, int shift_num) {
     int shifted;
     for (int i = 0; message[i] != '\0'; i++) {
         ch[i] = tolower(message[i]);
-       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
+       if (ch[i] != '\0' && ch[i] != ' ' && ch[i] != ':' && ch[i] != ',' && ch[i] != '.' && ch[i] != '\'' && ch[i] != '?' && ch[i] != '"' && ch[i] != '-' && ch[i] != '\n' && ch[i] != ((char)13)) {
             shifted_char_val = ch[i] - shift;
             if (shifted_char_val < FIRST_ASCII_LETTER_CODE) 
                 ch[i] = LAST_ASCII_LETTER_CODE - (FIRST_ASCII_LETTER_CODE - shifted_char_val) + 1;
