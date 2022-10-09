@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < ENG_ALPHABET_NUMBER; i++)
         text_occurrencies_list[i] = 0;
     
-    char* encrypted_file = "content.txt";
+    char* encrypted_file = "encrypted.txt";
     count_occurrencies(encrypted_file, text_occurrencies_list);
 
     // prints each letter occurrency in the given text
