@@ -8,11 +8,11 @@
 #include <stdlib.h>
 
 typedef struct Node {
-    int value;
+    long value;
     struct Node* next;
 } NODE;
 
-NODE* init_list(int val) {
+NODE* init_list(long val) {
     NODE* first = (NODE*)malloc(sizeof(NODE));
 
     if (first == NULL) {
@@ -26,7 +26,7 @@ NODE* init_list(int val) {
 }
 
 // Attention: for simplicity, a O(n) version has been implemented
-void tail_insert(NODE* list, int val) {
+void tail_insert(NODE* list, long val) {
     if (list == NULL) {
         fprintf(stderr, "Attention: missing list!");
         EXIT_FAILURE;
@@ -66,12 +66,12 @@ void print_list(NODE* list) {
     printf("\n");
 }
 
-NODE* factorization_brute_force(int number_to_factor) {
+NODE* factorization_brute_force(long number_to_factor) {
     //LIST
     NODE* list = init_list(0);
 
     int cnt = 0;
-    int n = number_to_factor;
+    long n = number_to_factor;
 
     while (1) {
         if (n%2 == 0) {
@@ -93,7 +93,12 @@ NODE* factorization_brute_force(int number_to_factor) {
             n /= 7;
             tail_insert(list, 7);
             cnt++;
-        } else {
+        } 
+        else if (n < 0) {
+            printf("Attention: integer too big.\n");
+            EXIT_FAILURE;
+        }
+        else {
             tail_insert(list, n);
             cnt++;
             printf("Factorization ended. N's value = %d\nNumber of factors = %d\n", n, cnt);
@@ -160,7 +165,7 @@ char* simplify(NODE* list) {
 }
 
 int main(int argc, char** argv) {
-    int arg_integer = strtol(argv[1], NULL, 10);
+    long arg_integer = strtol(argv[1], NULL, 10);
     NODE* list = factorization_brute_force(arg_integer);
     print_list(list->next);
 
