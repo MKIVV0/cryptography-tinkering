@@ -66,7 +66,7 @@ void print_list(NODE* list) {
     printf("\n");
 }
 
-int factorization_brute_force(int number_to_factor) {
+NODE* factorization_brute_force(int number_to_factor) {
     //LIST
     NODE* list = init_list(0);
 
@@ -77,51 +77,98 @@ int factorization_brute_force(int number_to_factor) {
         if (n%2 == 0) {
             n /= 2;
             tail_insert(list, 2);
+            cnt++;
         }
         else if (n%3 == 0) {
             n /= 3;
             tail_insert(list, 3);
+            cnt++;
         }
         else if (n%5 == 0) {
             n /= 5;
             tail_insert(list, 5);
+            cnt++;
         } 
         else if (n%7 == 0) {
             n /= 7;
             tail_insert(list, 7);
+            cnt++;
         } else {
-            printf("Factorization ended. N's value = %d\n", n);
+            printf("Factorization ended. N's value = %d\nNumber of factors = %d\n", n, cnt);
             break;
         }
     }
+    return list;
+}
 
-    NODE* curr = list;
+char* simplify(NODE* list) {
 
-    // ORDER THE LIST
-    //TRAVERSE THE LIST L AND GET A COUNTER THAT INDICATES THE LIST'S LENGTH |L|
-    int el_cnt = 0;
-    while (curr != NULL) {
-        curr = list->next;
-        el_cnt++;
+    if (list == NULL) {
+        fprintf(stderr, "Attention: list empty!");
+        EXIT_FAILURE;
     }
 
-    // GETS THE NUMBER OF DIFFERENT INTEGERS CONTAINED IN THE LIST
-    int diff_nums = 1;
-    curr = list;
-    while (curr->next != NULL) {
-        if (curr != NULL && curr->value == 0 && curr->next != NULL) curr = curr->next;
+    int diff_int_cnt = 1;
+    int same_int_cnt = 0;
 
-        if (curr->value != curr->next->value) {
-            diff_nums++;
+    // COUNTS THE DIFFERENT INTEGERS INSIDE THE LIST
+    NODE* prev = list;
+    NODE* curr = list->next;
+    while (curr != NULL) {
+        if (prev != curr) diff_int_cnt++;
+        prev = prev->next;
+        curr = curr->next;
+    }
+
+    // GETS EACH INTEGERS' OCCURRENCY
+    int* integer_occs = (int*)calloc(diff_int_cnt, sizeof(int));
+    int occs_idx = 0;
+    prev = list;
+    curr = list->next;
+    while (curr != NULL) {
+        if (prev == curr) same_int_cnt++;
+        else {
+            integer_occs[occs_idx] = same_int_cnt;
+            occs_idx++;
+            same_int_cnt = 0;
+        } 
+    }
+
+    // BUILDS THE SIMPLIFIED STRING OF INTEGERS
+    prev = list;
+    curr = list->next;
+    char* str = (char*)calloc((diff_int_cnt*4)+1, sizeof(char));
+    occs_idx = 0;
+    int str_idx = 0;
+    while (curr != NULL) {
+        if (prev != curr) {
+            str[str_idx] = prev->value;
+            str[str_idx+1] = '^';
+            str[str_idx+2] =  integer_occs[occs_idx];
+            str[str_idx+3] = '+';
+            str_idx++;
+            occs_idx++;
+        } else {
+            prev = prev->next;
             curr = curr->next;
         }
     }
 
-
-    return 0;
+    return str;
 }
 
 int main(int argc, char** argv) {
-    
+    int arg_integer = strtol(argv[1], NULL, 10);
+    NODE* list = factorization_brute_force(arg_integer);
+    print_list(list->next);
+
+    char* str = simplify(list->next);
+    printf("Simplified expression:\n");
+    while (*str != '\n') {
+        if (*str != '+') printf("%c");
+        else printf(" %c ");
+    }
+    printf("\n");
+
     return 0;
 }
