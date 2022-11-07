@@ -94,6 +94,8 @@ NODE* factorization_brute_force(int number_to_factor) {
             tail_insert(list, 7);
             cnt++;
         } else {
+            tail_insert(list, n);
+            cnt++;
             printf("Factorization ended. N's value = %d\nNumber of factors = %d\n", n, cnt);
             break;
         }
@@ -162,6 +164,7 @@ int main(int argc, char** argv) {
     NODE* list = factorization_brute_force(arg_integer);
     print_list(list->next);
 
+/*
     char* str = simplify(list->next);
     printf("Simplified expression:\n");
     while (*str != '\n') {
@@ -169,6 +172,7 @@ int main(int argc, char** argv) {
         else printf(" %c ");
     }
     printf("\n");
+*/
 
     return 0;
 }
