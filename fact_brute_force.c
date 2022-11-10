@@ -152,15 +152,5 @@ int main(int argc, char **argv)
 
     simplify(list->next);
 
-    /*
-        char* str = simplify(list->next);
-        printf("Simplified expression:\n");
-        while (*str != '\n') {
-            if (*str != '+') printf("%c");
-            else printf(" %c ");
-        }
-        printf("\n");
-    */
-
     return 0;
 }
