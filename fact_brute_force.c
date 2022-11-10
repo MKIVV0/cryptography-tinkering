@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 {
     unsigned long arg_integer = strtol(argv[1], NULL, 10);
     NODE *list = factorization_brute_force(arg_integer);
-    print_list(list->next);
+    // print_list(list->next);
 
     simplify(list->next);
 
