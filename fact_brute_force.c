@@ -108,60 +108,40 @@ NODE *factorization_brute_force(unsigned long number_to_factor)
     return list;
 }
 
-char *simplify(NODE *list)
+void simplify(NODE *list)
 {
-
     if (list == NULL)
     {
         fprintf(stderr, "Attention: list empty!");
         EXIT_FAILURE;
     }
 
-    int list_length = 0;
-    NODE *tmp_node = list;
-
-    // Gets the list's length
-    while (tmp_node->next != NULL)
+    int occ_cnt = 1;
+    NODE *list_p = list;
+    NODE *list_p_next = list->next;
+    while (list_p_next != NULL && list_p != NULL)
     {
-        tmp_node = tmp_node->next;
-        list_length++;
+        if (list_p->value == list_p_next->value)
+        {
+            ++occ_cnt;
+            list_p = list_p->next;
+            list_p_next = list_p_next->next;
+        }
+        else if (occ_cnt == 1)
+        {
+            printf("%d * ", list_p->value);
+            list_p = list_p->next;
+            list_p_next = list_p_next->next;
+        }
+        else
+        {
+            printf("%d^%d * ", list_p->value, occ_cnt);
+            occ_cnt = 1;
+            list_p = list_p->next;
+            list_p_next = list_p_next->next;
+        }
     }
-
-    /*
-        // dinamically allocated result array
-        char *tmp = (char *)calloc(list_length * 4 + 1, sizeof(char));
-
-            // occurrencies of a number that gets resetted to 1 each time list_p != list_p_next
-            int num_occurrencies = 1;
-            // points to the first element of the list
-            NODE *list_p = list;
-            // points to the element that follows the element pointed by list_p
-            NODE *list_p_next = list->next;
-            // keeps track of the index of tmp, in order to insert the elements in format (num^occurrencies +)
-            int tmp_index = 0;
-
-            while (list_p != NULL && list_p_next != NULL)
-            {
-                if (list_p->value == list_p_next->value)
-                {
-                    ++num_occurrencies;
-                    list_p = list_p->next;
-                    list_p_next = list_p_next->next;
-                }
-                else
-                {
-                    tmp[tmp_index++] = list_p->value;
-                    tmp[tmp_index++] = '^';
-                    tmp[tmp_index++] = num_occurrencies;
-                    tmp[tmp_index] = '+';
-                    num_occurrencies = 1;
-                }
-            }
-
-            tmp[--tmp_index] = '\n';
-            */
-
-    // return tmp;
+    printf("%d\n", list_p->value);
 }
 
 int main(int argc, char **argv)
@@ -169,11 +149,8 @@ int main(int argc, char **argv)
     unsigned long arg_integer = strtol(argv[1], NULL, 10);
     NODE *list = factorization_brute_force(arg_integer);
     print_list(list->next);
-    char *simplified_res = simplify(list->next);
 
-    while (*simplified_res != '\n')
-        printf("%c", *simplified_res);
-    printf("\n");
+    simplify(list->next);
 
     /*
         char* str = simplify(list->next);
