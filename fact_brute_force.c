@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define DEBUG 0
+
 typedef struct Node
 {
     unsigned long value;
@@ -76,6 +78,8 @@ void print_list(NODE *list)
     printf("\n");
 }
 
+
+// Factorization brute force function
 NODE *factorization_brute_force(unsigned long number_to_factor)
 {
     // LIST
@@ -109,11 +113,24 @@ NODE *factorization_brute_force(unsigned long number_to_factor)
     return list;
 }
 
-NODE *factorization_reverse() {
-    NODE *tmp;
-    return tmp;
+// Factorization reversal function
+unsigned long factorization_reversal(NODE* list) {
+    unsigned long result = 1;
+
+    NODE* tmp = list->next; // the list has a starting node which element is 0, therefore, a node has to be skipped
+    int i = 0;
+    while (tmp != NULL && tmp->next != NULL) {
+        result = result * tmp->value;
+#if DEBUG
+        printf("result at step %d: %d\n", result, i++);
+#endif
+        tmp = tmp->next;
+    }
+
+    return result;
 }
 
+// Formats the given list into a more readable form. E.g. list = (2,2,2,3,3) --> 2^3 * 3^2 * 1
 void simplify(NODE *list)
 {
     if (list == NULL)
@@ -156,17 +173,26 @@ void simplify(NODE *list)
  
 int main(int argc, char **argv)
 {   
-    clock_t t = clock();
+    clock_t t1 = clock();
 
     unsigned long arg_integer = strtol(argv[1], NULL, 10);
-    NODE *list = factorization_brute_force(arg_integer);
+    NODE *list = factorization_brute_force(arg_integer); // list of factors
     // print_list(list->next);
 
     simplify(list->next);
 
-    t = clock() - t;
-    double time_elapsed = (((double)t)/CLOCKS_PER_SEC)*1000;
-    printf("TIme elapsed: %f ms\n", time_elapsed);
+    t1 = clock() - t1;
+    double time_elapsed_1 = (((double)t1)/CLOCKS_PER_SEC)*1000;
+    printf("Time elapsed for N's factorization: %f ms\n\n\n", time_elapsed_1);
+
+
+
+    clock_t t2 = clock();
+    unsigned long rev_fact = factorization_reversal(list); // factorization reversal
+    t2 = clock() - t2;
+    double time_elapsed_2 = (((double)t2)/CLOCKS_PER_SEC)*1000;
+    printf("Result of the factorization reversal: %d\n", rev_fact);
+    printf("Time elapsed for the factorization reversal: %f ms\n", time_elapsed_2);
 
     return 0;
 }
