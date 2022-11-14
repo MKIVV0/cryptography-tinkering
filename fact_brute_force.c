@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct Node
 {
@@ -103,9 +104,14 @@ NODE *factorization_brute_force(unsigned long number_to_factor)
 
     tail_insert(list, n);
     cnt++;
-    printf("Factorization ended. N's value = %d\nNumber of factors = %d\n", n, cnt);
+    printf("Factorization ended. N's value = %d\nNumber of steps = %d\n", n, cnt);
 
     return list;
+}
+
+NODE *factorization_reverse() {
+    NODE *tmp;
+    return tmp;
 }
 
 void simplify(NODE *list)
@@ -116,16 +122,19 @@ void simplify(NODE *list)
         EXIT_FAILURE;
     }
 
+    int number_of_factors = 0;
     int occ_cnt = 1;
     NODE *list_p = list;
     NODE *list_p_next = list->next;
     while (list_p_next != NULL && list_p != NULL)
     {
+        if (list_p->value != list_p_next->value) ++number_of_factors;
         if (list_p->value == list_p_next->value)
         {
             ++occ_cnt;
             list_p = list_p->next;
             list_p_next = list_p_next->next;
+
         }
         else if (occ_cnt == 1)
         {
@@ -142,15 +151,22 @@ void simplify(NODE *list)
         }
     }
     printf("%d\n", list_p->value);
+    printf("Number of factors = %d\n", number_of_factors+1);
 }
-
+ 
 int main(int argc, char **argv)
-{
+{   
+    clock_t t = clock();
+
     unsigned long arg_integer = strtol(argv[1], NULL, 10);
     NODE *list = factorization_brute_force(arg_integer);
     // print_list(list->next);
 
     simplify(list->next);
+
+    t = clock() - t;
+    double time_elapsed = (((double)t)/CLOCKS_PER_SEC)*1000;
+    printf("TIme elapsed: %f ms\n", time_elapsed);
 
     return 0;
 }
